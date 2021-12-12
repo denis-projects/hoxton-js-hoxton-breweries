@@ -5,16 +5,25 @@ const selectStateForm = document.querySelector('#select-state-form')
 
 const state = {
     breweries: [],
-    selectedState: null
+    selectedState: null,
+    breweryTypes: ['micro', 'regional', 'brewpub']
+}
+
+function getBreweriesToDisplay() {
+    let breweriesToDisplay = state.breweries
+
+    breweriesToDisplay = breweriesToDisplay.filter(brewery =>
+        state.breweryTypes.includes(brewery.brewery_type)
+    )
 }
 
 
-function getBreweries() {
+function fetchBreweries() {
     return fetch(baseUrl).then(resp => resp.json())
 }
 
 
-function getBreweriesByState(state) {
+function fetchBreweriesByState(state) {
     return fetch(`${baseUrl}?by_state=${state}`).then(resp => resp.json())
 }
 
@@ -27,7 +36,7 @@ function listenToSelectStateForm() {
         event.preventDefault()
         state.selectedState = selectStateForm['select-state'].value
 
-        getBreweriesByState(state.selectedState)
+        fetchBreweriesByState(state.selectedState)
             .then(function (breweries) {
                 state.breweries = breweries
             })
