@@ -3,6 +3,9 @@ const baseUrl = 'https://api.openbrewerydb.org/breweries'
 
 const selectStateForm = document.querySelector('#select-state-form')
 
+const filterSectionEl = document.querySelector('.filters-section')
+console.log(filterSectionEl)
+
 const state = {
     breweries: [],
     selectedState: null,
@@ -15,6 +18,9 @@ function getBreweriesToDisplay() {
     breweriesToDisplay = breweriesToDisplay.filter(brewery =>
         state.breweryTypes.includes(brewery.brewery_type)
     )
+
+    breweriesToDisplay = breweriesToDisplay.slice(0, 10)
+    return breweriesToDisplay
 }
 
 
@@ -28,7 +34,22 @@ function fetchBreweriesByState(state) {
 }
 
 
-function render() { }
+function renderFilterSection() {
+    if (state.breweries.length !== 0) {
+        filterSectionEl.style.display = "block"
+    } else {
+        filterSectionEl.style.display = "none"
+    }
+}
+
+function renderBreweryList() {
+
+}
+
+function render() {
+    renderFilterSection()
+    renderBreweryList()
+}
 
 
 function listenToSelectStateForm() {
@@ -39,6 +60,7 @@ function listenToSelectStateForm() {
         fetchBreweriesByState(state.selectedState)
             .then(function (breweries) {
                 state.breweries = breweries
+                render()
             })
 
     })
@@ -46,6 +68,7 @@ function listenToSelectStateForm() {
 
 
 function init() {
+    render()
     listenToSelectStateForm()
 }
 
